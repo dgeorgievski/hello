@@ -1,0 +1,90 @@
+name: build
+on: 
+  create:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - name: Clone repo
+      uses: actions/checkout@v2  
+      with:
+        fetch-depth: '0'
+
+    - name: Set version
+      run: |
+        #!/usr/bin/env bash
+        
+        ## efs/heads/[feature]/my-branch
+        current_branch=${GITHUB_REF##*/}
+        echo "CUR_BRANCH: $current_branch"
+        cur_date=$(date +%Y%m%d)
+        echo "cur date: ${cur_date}"
+        echo "run id: ${GITHUB_RUN_ID}"
+
+        APP_VERSION="$(grep 'var VERSION' pkg/version/version.go | awk '{ print $4 }' | tr -d '"')"
+        APP_DEV_VERSION="${current_branch}-${cur_date}-${GITHUB_RUN_ID}"
+        GIT_SHORT_COMMIT="$(git rev-list --abbrev-commit -1 HEAD)"
+        UNIX_DATE="$(date +%s%M)"
+
+        echo "APP_VERSION=${APP_VERSION}" >> "$GITHUB_ENV"
+        echo "APP_DEV_VERSION=${APP_DEV_VERSION}" >> "$GITHUB_ENV"
+        echo "CUR_BRANCH=${current_branch}" >> "$GITHUB_ENV"
+        echo "GIT_SHORT_COMMIT=${GIT_SHORT_COMMIT}" >> "$GITHUB_ENV"
+        echo "UNIX_DATE=${UNIX_DATE}" >> "$GITHUB_ENV"
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '^1.24'
+
+    - name: Display Go version
+      run: go version
+    - name: Install dependencies
+      run: |
+        go mod download
+    - name: Build hello app
+      run: |
+        #!/usr/bin/env bash
+        NEW_APP_VERSION="$APP_VERSION"
+        if [[ $CUR_BRANCH != "main" ]]; then
+          echo "Working on a dev branch"
+          NEW_APP_VERSION="$APP_DEV_VERSION"
+        fi
+        echo "NEW_APP_VERSION: $NEW_APP_VERSION"
+
+        go build \
+          -ldflags "-s -w  \
+            -X github.com/${GITHUB_REPOSITORY}/pkg/version.VERSION=${NEW_APP_VERSION} \
+            -X github.com/${GITHUB_REPOSITORY}/pkg/version.COMMIT=${GIT_SHORT_COMMIT} \
+            -X github.com/${GITHUB_REPOSITORY}/pkg/version.DATE=${UNIX_DATE}" \
+          -o ./bin/hello
+
+          ./bin/hello version
+
+    - name: push tags from main
+      if: github.ref_name == 'main'
+      env: 
+        GH_TOKEN: ${{ secrets.HELLO_TOKEN }}
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "github-actions@users.noreply.github.com"
+        git remote set-url origin https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        
+        NEW_TAG="v${APP_VERSION}"
+        git tag $NEW_TAG
+        git push origin $NEW_TAG
+
+    - name: Invoke release for a tag
+      if: github.ref_name == 'main'
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: release.yaml
+        token: ${{ secrets.HELLO_TOKEN }}
+
+      
