@@ -2,14 +2,15 @@
 
 A demo of best DevSecOps practices with focus on automation, collaboration, security and documentation.
 
-# Requirements
+## Requirements
+
 1. [go v1.24+](https://go.dev/doc/install)
 2. [git cli](https://git-scm.com/downloads)
 3. [make](https://www.gnu.org/software/make/) - Optional. In case of Windows OS, it is possible to execute the build commands defined in the Makefile from the command line.
 
 4. [Kind Kubernetes](https://kind.sigs.k8s.io/) 
 
-# Build hello application
+## Build hello application
 
 Clone hello repository. 
 ```sh
@@ -27,7 +28,7 @@ hello version
   commit: 1de9255
 ```
 
-# Build hello container image
+## Build hello container image
 
 ```sh
 $ make docker-build
@@ -53,12 +54,14 @@ hello version
   commit: 1de9255
 ```
 
-# Kubernetes deployment
+## Kubernetes deployment
 
-## Kind K8S cluster
+### Kind K8S cluster
+
 kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
 
 Create a local `hello` kind cluster.
+
 ```sh
 $ kind create cluster --name hello
 $ kind get clusters
@@ -66,6 +69,7 @@ hello
 ```
 
 Upload the dsocker image to the `hello` kind cluster.
+
 ```sh
 $ make kind-docker-upload
 
@@ -74,6 +78,7 @@ $ kind --name hello load docker-image dgeorgievski/dgeorgievski-hello:0.0.16
 ```
 
 Ensure `hello` container image is set to correct version in `deploy/manifests/deployment.yaml` manifest file.
+
 ```yaml
  spec:
     serviceAccountName: hello
@@ -83,12 +88,14 @@ Ensure `hello` container image is set to correct version in `deploy/manifests/de
 ```
 
 Create `hello` namespace
+
 ```sh
 $ kubectl create ns hello
 namespace/hello created
 ```
 
 Deploy `hello` app in the newly created namespace
+
 ```sh
 $ kubectl create -f deploy/manifests
 deployment.apps/hello created
@@ -112,7 +119,8 @@ replicaset.apps/hello-69c9cf5648   1         1         1       52s
 ```
 
 
-## Debugging hello Pod
+### Debugging hello Pod
+
 ```sh
 kubectl -n hello \
 debug -it \
@@ -144,15 +152,17 @@ PID   USER     TIME  COMMAND
 }
 ```
 
-# CI build and release workflows
+## CI build and release workflows
 
-## build
+### build
+
 This workflow builds the binary, sets the applicatin version and commit hash, and if the branch name is main it creates a git tag using the applicatin version, followed by a dispatch call to the release workflow.
 
 The version is based on the branch type:
 1. main - vN.N.N; It keeps the SemVer version from 
-2. other branch - The version follows the following format: <branchname>-<YYYYMMDD>.<github_run_number>
+2. other branch - The version follows the following format: `<branchname>-<YYYYMMDD>.<github_run_number>`
 
-## release
+### release
+
 Release is invoked by a push tag event. The tag value has to have the SemVer format with three parts: `v*.*.*`
 The release is automatically called from the build  workflow using a dispatch event call after the build workflow pushes a tag to the main branch.

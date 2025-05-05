@@ -28,7 +28,7 @@ jobs:
         echo "run id: ${GITHUB_RUN_ID}"
 
         APP_VERSION="$(grep 'var VERSION' pkg/version/version.go | awk '{ print $4 }' | tr -d '"')"
-        APP_DEV_VERSION="${current_branch}-${cur_date}-${GITHUB_RUN_ID}"
+        APP_DEV_VERSION="${current_branch}-${cur_date}.${GITHUB_RUN_ID}"
         GIT_SHORT_COMMIT="$(git rev-list --abbrev-commit -1 HEAD)"
         UNIX_DATE="$(date +%s%M)"
 
