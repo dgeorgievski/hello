@@ -89,10 +89,9 @@ changelog:
     - title: Other work
       order: 9999
 
-release:
-  footer: >-
+# release:
+#   # footer: >-
 
-    ---
+#   #   ---
 
-    Web: https://go-micro.dev
-    GitHub: https://github.com/micro/micro
+#   #   GitHub: https://github.com/dgeorgievski/hello
