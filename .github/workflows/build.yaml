@@ -22,11 +22,10 @@ jobs:
     - uses: hustcer/setup-nu@main
       with:
         version: "0.104.0"
-
+        features: default
+        enable-plugins: true
     - name: Get NuShell Env 
       run: |
-        const NU_LIB_DIRS = [ ${{ github.workspace }}/nu ]
-        const NU_PLUGIN_DIRS = [ ($nu.current-exe | path dirname) ] 
         plugin add inc 
         plugin use inc 
         plugin list
