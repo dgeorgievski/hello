@@ -6,7 +6,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version"
+	"github.com/dgeorgievski/hello/pkg/version"
 	"github.com/spf13/cobra"
 )
 

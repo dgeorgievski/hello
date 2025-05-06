@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version"
+	"github.com/dgeorgievski/hello/pkg/version"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 )
