@@ -34,17 +34,17 @@ jobs:
       run: |
         cd ${{ github.workspace }};
         ls -l;
-        use ./scripts/agit
+        # use ./scripts/agit
         
-        let subject = git show -s --format="%s"
+        # let subject = git show -s --format="%s"
 
-        let is_conv = agit core is_conventional
-        if $is_conv == true {
-          print "commit is conventional"
-        }else{
-          print "commit is not conventional"
-        }
-        print $"subject> ($subject)"
+        # let is_conv = agit core is_conventional
+        # if $is_conv == true {
+        #   print "commit is conventional"
+        # }else{
+        #   print "commit is not conventional"
+        # }
+        # print $"subject> ($subject)"
 
     - name: Set version
       shell: bash
