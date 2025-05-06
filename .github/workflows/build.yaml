@@ -26,13 +26,14 @@ jobs:
         enable-plugins: true
     - name: Get NuShell Env 
       run: |
-        version 
-        
+        version; 
+
         print $'Current env:'
         print $env
     - name: Check Conventional Commit
       run: |
-        ls -l 
+        cd ${{ github.workspace }};
+        ls -l;
         use ./scripts/agit
         
         let subject = git show -s --format="%s"
