@@ -1,4 +1,4 @@
-module github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello
+module github.com/dgeorgievski/hello
 
 go 1.24.0
 
