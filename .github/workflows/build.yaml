@@ -1,8 +1,11 @@
 name: build
-on: 
+on:
   push:
     branches:
       - '*'
+  create:
+  workflow_dispatch:
+
 defaults:
   run:
     shell: nu {0}
