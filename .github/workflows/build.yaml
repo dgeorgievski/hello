@@ -73,7 +73,16 @@ jobs:
       uses: hustcer/setup-nu@v3
       with:
         version: 0.104.0
-        
+    - name: Check NuShell ver
+      run: |
+        version 
+        print $"(char nl)Dir contents:(char nl)"
+        ls ((which nu).path.0 | path dirname)
+      
+    - name: Get NuShell Env 
+      run: |
+        print $'Current env:(char nl)'
+        print $env
     - name: Check Conventional Commit
       shell: nu {0}
       run: |
