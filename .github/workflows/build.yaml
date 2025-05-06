@@ -9,7 +9,6 @@ defaults:
     shell: nu {0}
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,17 +24,18 @@ jobs:
     - name: Get NuShell Env 
       run: |
         const NU_LIB_DIRS = [ ${{ github.workspace }}/nu ]
-        use module.nu *
-        print 'Use module by NU_LIB_DIRS Constant'
-        print (get-env 'ABC-XYZ' 'DEFAULT-FROM-NU-LIB-DIRS-CONSTANT')
-    
-        print $'Current env:(char nl)'
+        const NU_PLUGIN_DIRS ++= [ ($nu.current-exe | path dirname) ] 
+        plugin add inc 
+        plugin use inc 
+        plugin list
+        # test inc plugin
+        5 | inc
+
+        print $'Current env:'
         print $env
     - name: Check Conventional Commit
       run: |
         ls -l 
-
-        const NU_LIB_DIRS = [ ${{ github.workspace }}/nu ]
         use ./scripts/agit
         
         let subject = git show -s --format="%s"
@@ -47,6 +47,7 @@ jobs:
           print "commit is not conventional"
         }
         print $"subject> ($subject)"
+
     - name: Set version
       shell: bash
       run: |
@@ -100,15 +101,7 @@ jobs:
             -X github.com/${GITHUB_REPOSITORY}/pkg/version.DATE=${UNIX_DATE}" \
           -o ./bin/hello
 
-          ./bin/hello version
-
-    
-    - name: NuShell version
-      run: |
-        version 
-        print $"(char nl)Dir contents:(char nl)"
-        ls ((which nu).path.0 | path dirname)
-      
+          ./bin/hello version  
 
     ## No need to push tag from a workflow
     # - name: push tags from main
