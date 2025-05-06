@@ -26,12 +26,8 @@ jobs:
         enable-plugins: true
     - name: Get NuShell Env 
       run: |
-        plugin add inc 
-        plugin use inc 
-        plugin list
-        # test inc plugin
-        5 | inc
-
+        version 
+        
         print $'Current env:'
         print $env
     - name: Check Conventional Commit
