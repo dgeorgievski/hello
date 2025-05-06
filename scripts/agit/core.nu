@@ -4,6 +4,9 @@ export def is_conventional_commit [] {
 
   # Body is optional
   # let body = git show -s --format=%b
+
+  # Footer with trailers is optional
+  # Signed-off-by: Alice <alice@example.com>
   
   # check if subject complies
   # Examples https://www.conventionalcommits.org/en/v1.0.0/#examples
