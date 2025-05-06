@@ -1,6 +1,6 @@
 name: build
 on: 
-  # create:
+  create:
   push:
     branches:
       - '*'
