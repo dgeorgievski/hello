@@ -13,16 +13,19 @@ A demo of best DevSecOps practices with focus on automation, collaboration, secu
 ## Build hello application
 
 Clone hello repository. 
+
 ```sh
-$ git clone git@github.com:altimetrik-digital-enablement-demo-hub/dgeorgievski-hello.git
-$ cd dgeorgievski-hello
+> git clone git@github.com:altimetrik-digital-enablement-demo-hub/dgeorgievski-hello.git
+> cd dgeorgievski-hello
 ```
+
 Build the binary. TAG env variable sets the application version. If not specified, the default is `dev`
+
 ```sh
-$  TAG=0.0.16 make build
+> TAG=0.0.16 make build
 Build availalbe at ./bin/dgeorgievski-hello
 
-$ ./bin/dgeorgievski-hello version
+> ./bin/dgeorgievski-hello version
 hello version
   version: 0.0.16
   commit: 1de9255
