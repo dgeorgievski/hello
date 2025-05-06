@@ -26,7 +26,7 @@ jobs:
     - name: Get NuShell Env 
       run: |
         const NU_LIB_DIRS = [ ${{ github.workspace }}/nu ]
-        const NU_PLUGIN_DIRS ++= [ ($nu.current-exe | path dirname) ] 
+        const NU_PLUGIN_DIRS = [ ($nu.current-exe | path dirname) ] 
         plugin add inc 
         plugin use inc 
         plugin list
