@@ -31,7 +31,7 @@ use "../../scripts/agit"
 def main [COMMIT_MSG_FILE: string, 
           COMMIT_SOURCE?: string, 
           SHA1?: string] {
-  let res =  match (agit core is_conventional_commit_hook $COMMIT_MSG_FILE ) {
+  let res =  match (agit is_conventional_commit_hook $COMMIT_MSG_FILE ) {
     false => {
       let subject = open $COMMIT_MSG_FILE | lines | first
       print "Commit message is not compliant with Conventional Commits"

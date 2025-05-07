@@ -169,3 +169,7 @@ The version is based on the branch type:
 
 Release is invoked by a push tag event. The tag value has to have the SemVer format with three parts: `v*.*.*`
 The release is automatically called from the build  workflow using a dispatch event call after the build workflow pushes a tag to the main branch.
+
+## Git Hooks scripts
+
+The use of git hooks has been documented in [doc/git-hooks.md](doc/git-hooks.md) file.
