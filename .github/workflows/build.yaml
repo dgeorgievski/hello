@@ -22,8 +22,9 @@ jobs:
         ## efs/heads/[feature]/my-branch
         current_branch=${GITHUB_REF##*/}
         GIT_SHORT_COMMIT="$(git rev-list --abbrev-commit -1 HEAD)"
-        echo "CUR_BRANCH: $current_branch"
         cur_date=$(date +%Y%m%d)
+
+        echo "CUR_BRANCH: $current_branch"
         echo "cur date: ${cur_date}"
         echo "run id: ${GITHUB_RUN_ID}"
         echo "short commit: ${GIT_SHORT_COMMIT}"
@@ -68,26 +69,5 @@ jobs:
           -o ./bin/hello
 
           ./bin/hello version  
-
-    ## No need to push tag from a workflow
-    # - name: push tags from main
-    #   if: github.ref_name == 'main'
-    #   env: 
-    #     GH_TOKEN: ${{ secrets.HELLO_TOKEN }}
-    #   run: |
-    #     git config user.name "GitHub Actions"
-    #     git config user.email "github-actions@users.noreply.github.com"
-    #     git remote set-url origin https://${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-        
-    #     NEW_TAG="v${APP_VERSION}"
-    #     git tag $NEW_TAG  #v0.0.16
-    #     git push origin $NEW_TAG
-
-    # - name: Invoke release for a tag
-    #   if: github.ref_name == 'main'
-    #   uses: benc-uk/workflow-dispatch@v1
-    #   with:
-    #     workflow: release.yaml
-    #     token: ${{ secrets.HELLO_TOKEN }}
 
       
