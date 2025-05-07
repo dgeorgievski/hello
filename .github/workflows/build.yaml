@@ -1,14 +1,7 @@
 name: build
 on:
-  push:
-    branches:
-      - '*'
-  create:
+  push:  
   workflow_dispatch:
-
-defaults:
-  run:
-    shell: nu {0}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,33 +12,6 @@ jobs:
       uses: actions/checkout@v2  
       with:
         fetch-depth: '0'
-    - uses: hustcer/setup-nu@main
-      with:
-        version: "0.104.0"
-        features: default
-        enable-plugins: true
-    - name: Get NuShell Env 
-      run: |
-        version; 
-
-        print $'Current env:'
-        print $env
-    - name: Check Conventional Commit
-      run: |
-        cd ${{ github.workspace }};
-        ls -l;
-        # use ./scripts/agit
-        
-        # let subject = git show -s --format="%s"
-
-        # let is_conv = agit core is_conventional
-        # if $is_conv == true {
-        #   print "commit is conventional"
-        # }else{
-        #   print "commit is not conventional"
-        # }
-        # print $"subject> ($subject)"
-
     - name: Set version
       shell: bash
       run: |
