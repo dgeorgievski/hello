@@ -86,6 +86,9 @@ changelog:
     - title: "Documentation updates"
       regexp: ^.*?docs?(\(.+\))??!?:.+$
       order: 400
+    - title: "CI Workflows"
+      regexp: ^.*?ci?(\(.+\))??!?:.+$
+      order: 500
     - title: Other work
       order: 9999
 
