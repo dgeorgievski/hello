@@ -1,9 +1,8 @@
 name: build
-on: 
-  create:
-  push:
-    branches:
-      - '*'
+
+on:
+  push:  
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,8 +14,8 @@ jobs:
       uses: actions/checkout@v2  
       with:
         fetch-depth: '0'
-
     - name: Set version
+      shell: bash
       run: |
         #!/usr/bin/env bash
         
@@ -51,6 +50,7 @@ jobs:
       run: |
         go mod download
     - name: Build hello app
+      shell: bash
       run: |
         #!/usr/bin/env bash
         NEW_APP_VERSION="$APP_VERSION"
@@ -67,7 +67,7 @@ jobs:
             -X github.com/${GITHUB_REPOSITORY}/pkg/version.DATE=${UNIX_DATE}" \
           -o ./bin/hello
 
-          ./bin/hello version
+          ./bin/hello version  
 
     - name: Setup NuShell
       uses: hustcer/setup-nu@v3
