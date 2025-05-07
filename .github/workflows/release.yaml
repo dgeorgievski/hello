@@ -6,7 +6,19 @@ on:
     tags:
       - "v*.*.*"
 
-  workflow_dispatch: 
+  workflow_dispatch:
+    inputs:
+      release_bump:
+        description: Select part of SemVer to increment. Overriden by version_override value if provided. 
+        default: Patch
+        type: choice
+        options:
+          - Major
+          - Minor
+          - Patch 
+      version_override:
+        description: Set version manually. If provided, it overrides the application version.
+        type: string
 
   # workflow_run:
   #   workflows: [build]
