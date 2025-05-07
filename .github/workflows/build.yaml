@@ -1,7 +1,9 @@
 name: build
+
 on:
   push:  
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -66,6 +68,38 @@ jobs:
           -o ./bin/hello
 
           ./bin/hello version  
+
+    - name: Setup NuShell
+      uses: hustcer/setup-nu@v3
+      with:
+        version: 0.104.0
+    - name: Check NuShell ver
+      run: |
+        version 
+        print $"(char nl)Dir contents:(char nl)"
+        ls ((which nu).path.0 | path dirname)
+      
+    - name: Get NuShell Env 
+      run: |
+        print $'Current env:(char nl)'
+        print $env
+    - name: Check Conventional Commit
+      shell: nu {0}
+      run: |
+        ls -l 
+
+        const NU_LIB_DIRS = [ ${{ github.workspace }}/nu ]
+        use ./scripts/agit
+        
+        let subject = git show -s --format="%s"
+
+        let is_conv = agit core is_conventional
+        if $is_conv == true {
+          print "commit is conventional"
+        }else{
+          print "commit is not conventional"
+        }
+        print $"subject> ($subject)"
 
     ## No need to push tag from a workflow
     # - name: push tags from main
