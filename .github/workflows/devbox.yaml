@@ -17,5 +17,8 @@ jobs:
       - name: Run arbitrary commands
         run: devbox run -- echo "done!"
 
-      - name: Run a script called test
-        run: devbox run test
+      - name: Start DevBox and Nu shells
+        run: |
+          devbox shell
+          nu
+          ls -l
