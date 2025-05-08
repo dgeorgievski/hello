@@ -1,0 +1,21 @@
+name: devbox
+
+on: 
+  push:
+    branches:
+      - devbox
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.11.0
+
+      - name: Run arbitrary commands
+        run: devbox run -- echo "done!"
+
+      - name: Run a script called test
+        run: devbox run test
