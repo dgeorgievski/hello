@@ -2,10 +2,6 @@
 name: release
 
 on:
-  # push:
-  #   tags:
-  #     - "v*.*.*"
-
   workflow_dispatch:
     inputs:
       release_bump:
@@ -16,7 +12,6 @@ on:
           - Major
           - Minor
           - Patch 
-
       version_override:
         description: Set version manually. If provided, it overrides the application version.
         type: string
@@ -45,12 +40,12 @@ jobs:
           NEW_APP_VERSION=""
           semver_rex='^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
           if [[ "${{ inputs.version_override }}x" != "x"; then  
-            if [[ ! ${{ inputs.version_override }} =~ $semver_rex ]]; then
+            if [[ ! "${{ inputs.version_override }}" =~ $semver_rex ]]; then
               echo "Provided version is not in SemVer format: ${{ inputs.version_override }}"
               exit 1
             fi
-            ver=${{ inputs.version_override }}
-            NEW_APP_VERSION=${ver#v}
+            ver="${{ inputs.version_override }}"
+            NEW_APP_VERSION="${ver#v}"
             ver_updated_stage=1
           fi
 
@@ -59,10 +54,10 @@ jobs:
             ver_updated_stage=2
 
             latest_tag=$(git tag -l | tail -1)
-            latest_tag=${latest_tag#v}
+            latest_tag="${latest_tag#v}"
             IFS='.' read -r MAJOR MINOR PATCH  <<< $latest_tag
 
-            case ${{ inputs.release_bump }} in
+            case "${{ inputs.release_bump }}" in
               "Major")
                 MAJOR=$((MAJOR + 1))
               ;;
@@ -102,9 +97,6 @@ jobs:
 
             echo "Version changed, tag created and changes pushed to origin"
           fi
-
-        
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
