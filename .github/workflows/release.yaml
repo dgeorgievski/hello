@@ -74,7 +74,7 @@ jobs:
                 exit 2
                 ;;
             esac
-            NEW_APP_VERSION="$MAJOR.MINOR.PATCH"
+            NEW_APP_VERSION="${MAJOR}.${MINOR}.${PATCH}"
           fi
 
           if [[ $ver_updated_stage > 0 ]]; then
