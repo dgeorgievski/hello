@@ -2,7 +2,7 @@ package version
 
 import "fmt"
 
-var VERSION = "1.1.7"
+var VERSION = "1.1.8"
 var COMMIT = "none"
 var DATE = "none"
 
