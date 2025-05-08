@@ -39,7 +39,7 @@ jobs:
           APP_VERSION="$(grep 'var VERSION' pkg/version/version.go | awk '{ print $4 }' | tr -d '"')"
           NEW_APP_VERSION=""
           semver_rex='^v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)'
-          if [[ "${{ inputs.version_override }}x" != "x"; then  
+          if [[ "${{ inputs.version_override }}x" != "x" ]]; then  
             if [[ ! "${{ inputs.version_override }}" =~ $semver_rex ]]; then
               echo "Provided version is not in SemVer format: ${{ inputs.version_override }}"
               exit 1
