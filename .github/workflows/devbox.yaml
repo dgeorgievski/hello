@@ -13,12 +13,13 @@ jobs:
 
       - name: Install devbox
         uses: jetify-com/devbox-install-action@v0.11.0
+        with:
+          enable-cache: true
 
       - name: Run arbitrary commands
         run: devbox run -- echo "done!"
 
-      - name: Start DevBox and Nu shells
+      - name: Conventional Check of last commit
         run: |
-          devbox shell
-          nu
-          ls -l
+          devbox run ccheck
+          

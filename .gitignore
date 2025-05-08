@@ -28,6 +28,7 @@ dist/
 site
 bin/
 work/
+.devbox/
 
 # binary
 hello

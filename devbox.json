@@ -3,7 +3,8 @@
   "packages": [
     "ripgrep@latest",
     "nushell@0.104.0",
-    "nushellPlugins.query@latest"
+    "nushellPlugins.query@latest",
+    "go@1.24.2"
   ],
   "shell": {
     "init_hook": [
@@ -12,7 +13,8 @@
     "scripts": {
       "test": [
         "echo \"run test\""
-      ]
+      ],
+      "ccheck": ["./scripts/ci/conv-commit.nu"]
     }
   }
 }
