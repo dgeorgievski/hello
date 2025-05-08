@@ -173,3 +173,11 @@ The release is automatically called from the build  workflow using a dispatch ev
 ## Git Hooks scripts
 
 The use of git hooks has been documented in [doc/git-hooks.md](doc/git-hooks.md) file.
+
+## Git commands
+
+Git commands are implemented in NuShell. They are wrappers around regular git commands tha provide additional functionality.
+
+### Git Squash
+
+Usage TODO
