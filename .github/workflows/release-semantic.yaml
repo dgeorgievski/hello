@@ -1,0 +1,44 @@
+# .github/workflows/release.yml
+name: semantic release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_bump:
+        description: Select part of SemVer to increment. Overriden by version_override value if provided. 
+        type: choice
+        default: Minor
+        options:
+          - Major
+          - Minor
+          - Patch 
+      version_override:
+        description: Set version manually. If provided, it overrides the application version.
+        type: string
+
+permissions:
+  contents: write
+  packages: write
+  # issues: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '^1.24'
+
+      - name: Run GoReleaser
+        uses: go-semantic-release/action@v1
+        with:
+          hooks: goreleaser
+        env:
+          GITHUB_TOKEN: ${{ secrets.HELLO_TOKEN }}
+    
