@@ -27,9 +27,13 @@ builds:
         goarch: arm
         goarm: 7
     
+    flags:
+      - -trimpath
+      - -buildvcs=false
     # Default: '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser'.
     # Templates: allowed.
     ldflags:
+      - -extldflags '-static'
       - -s -w 
       - -X github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version.VERSION={{.Version}}
       - -X github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version.COMMIT={{.ShortCommit}}
