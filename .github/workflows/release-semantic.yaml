@@ -3,18 +3,6 @@ name: semantic release
 
 on:
   workflow_dispatch:
-    inputs:
-      release_bump:
-        description: Select part of SemVer to increment. Overriden by version_override value if provided. 
-        type: choice
-        default: Minor
-        options:
-          - Major
-          - Minor
-          - Patch 
-      version_override:
-        description: Set version manually. If provided, it overrides the application version.
-        type: string
 
 permissions:
   contents: write

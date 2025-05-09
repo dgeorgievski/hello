@@ -15,7 +15,7 @@ on:
       version_override:
         description: Set version manually. If provided, it overrides the application version.
         type: string
-
+        
 permissions:
   contents: write
   packages: write
