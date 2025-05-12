@@ -181,3 +181,7 @@ Git commands are implemented in NuShell. They are wrappers around regular git co
 ### Git Squash
 
 Usage TODO
+
+# Semantic Releases
+
+TODO

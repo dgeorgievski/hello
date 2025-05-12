@@ -30,4 +30,3 @@ jobs:
           changelog-generator-opt: "emojis=true"
         env:
           GITHUB_TOKEN: ${{ secrets.HELLO_TOKEN }}
-
