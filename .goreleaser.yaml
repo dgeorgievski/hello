@@ -96,9 +96,9 @@ changelog:
     - title: Other work
       order: 9999
 
-# release:
-#   # footer: >-
+release:
+  footer: >-
 
-#   #   ---
+    ---
 
-#   #   GitHub: https://github.com/dgeorgievski/hello
+    GitHub: https://github.com/dgeorgievski/hello

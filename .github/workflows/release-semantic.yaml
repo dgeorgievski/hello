@@ -26,7 +26,17 @@ jobs:
       - name: Run GoReleaser
         uses: go-semantic-release/action@v1
         with:
-          hooks: goreleaser
+          # hooks: goreleaser
+          changelog-generator-opt: "emojis=true"
         env:
           GITHUB_TOKEN: ${{ secrets.HELLO_TOKEN }}
-    
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          # either 'goreleaser' (default) or 'goreleaser-pro'
+          distribution: goreleaser
+          # 'latest', 'nightly', or a semver
+          version: "~> v2"
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.HELLO_TOKEN }}
