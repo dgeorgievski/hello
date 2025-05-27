@@ -2,6 +2,8 @@
 
 A demo of best DevSecOps practices with focus on automation, collaboration, security and documentation.
 
+Try again with improving Git Workflow.
+
 ## Requirements
 
 1. [go v1.24+](https://go.dev/doc/install)
