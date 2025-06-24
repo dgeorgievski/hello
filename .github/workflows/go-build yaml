@@ -1,0 +1,49 @@
+name: Build Go App
+description: Build with GitHub Reusable Workflows
+on:
+  workflow_dispatch:
+    inputs:
+      app-name:
+        description: 'Application name'
+        default: 'netwebapi'
+        required: true
+        type: string
+      go-version:
+        description: 'Go version'
+        required: false
+        type: string
+        default: '1.24'
+      registry:
+        description: 'Container registry'
+        required: false
+        type: string
+        default: 'ghcr.io'
+      docker-context:
+        description: 'Context for Docker build. Default .'
+        required: false
+        type: string
+        default: '.'
+      docker-file:
+        description: 'Dockerfile path. Default ./Dockerfile'
+        required: false
+        type: string
+        default: './Dockerfile'
+      docker-push:
+        description: 'Push the Docker image to the registry. Default true'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  test-build:
+    uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@test-go
+    with:
+      app-name: ${{ inputs.app-name }}
+      go-version: ${{ inputs.go-version }}
+      registry: ${{ inputs.registry }}
+      docker-context: ${{ inputs.docker-context }}
+      docker-file: ${{ inputs.docker-file }}
+      docker-push: ${{ inputs.docker-push }}
+    secrets: inherit
+
+      
