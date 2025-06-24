@@ -1,5 +1,5 @@
 name: Build Go App
-description: Build with GitHub Reusable Workflows
+
 on:
   workflow_dispatch:
     inputs:
