@@ -5,7 +5,7 @@ on:
     inputs:
       app-name:
         description: 'Application name'
-        default: 'netwebapi'
+        default: 'hello'
         required: true
         type: string
       go-version:
