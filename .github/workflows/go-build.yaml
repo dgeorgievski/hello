@@ -6,7 +6,7 @@ on:
       app-name:
         description: 'Application name'
         default: 'hello'
-        required: trueg
+        required: true
         type: string
       go-version:
         description: 'Go version'
@@ -24,7 +24,7 @@ on:
         type: string
         default: '.'
       docker-file:
-        description: 'Dockerfile path. Default ./Dockerfile'
+        description: 'Dockerfile path. Default ./docker/Dockerfile'
         required: false
         type: string
         default: './docker/Dockerfile'
