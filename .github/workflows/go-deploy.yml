@@ -1,0 +1,61 @@
+name: Test Deploy Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      image-name:
+        description: 'Image name'
+        default: 'netwebapi'
+        required: true
+        type: string
+      image-tag:
+        description: 'Image tag'
+        default: 'latest'
+        required: true
+        type: string
+      namespace:
+        description: 'Kubernetes namespace'
+        default: 'netwebapi'
+        required: true
+        type: string
+      release-name:
+        description: 'Helm release name'
+        default: 'netwebapi'
+        required: true
+        type: string
+      registry:
+        description: 'Container registry'
+        required: false
+        type: string
+        default: 'ghcr.io'
+      chart:
+        description: 'Chart path'
+        required: false
+        type: string
+        default: 'deploy/helm/hello'
+      helm-version:
+        description: 'Helm version'
+        required: false
+        type: string
+        default: 'helm3'
+      target:
+        description: "Deployment platform"
+        required: false
+        default: 'local-k8s'
+        type: choice 
+        options:
+          - 'local-k8s'
+          - 'aws-eks'
+jobs:
+  test:
+    uses: dgeorgievski/my-github-actions/.github/workflows/go-deploy.yml@test-go
+    with:
+      image-name: ${{ inputs.image-name }}
+      image-tag: ${{ inputs.image-tag }}
+      namespace: ${{ inputs.namespace }}
+      registry: ${{ inputs.registry }}
+      chart: ${{ inputs.chart }}
+      release-name: ${{ inputs.release-name }}
+      helm-version: ${{ inputs.helm-version }}
+      target: ${{ inputs.target }}
+    secrets: inherit
