@@ -5,7 +5,7 @@ on:
     inputs:
       image-name:
         description: 'Image name'
-        default: 'netwebapi'
+        default: 'hello'
         required: true
         type: string
       image-tag:
@@ -20,7 +20,7 @@ on:
         type: string
       release-name:
         description: 'Helm release name'
-        default: 'netwebapi'
+        default: 'hello'
         required: true
         type: string
       registry:
