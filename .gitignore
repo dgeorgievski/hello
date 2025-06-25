@@ -30,4 +30,5 @@ bin/
 work/
 
 # binary
-hello
+# hello
+# !./deploy/helm/hello
