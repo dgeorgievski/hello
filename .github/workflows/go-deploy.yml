@@ -5,7 +5,7 @@ on:
     inputs:
       image-name:
         description: 'Image name'
-        default: 'hello'
+        default: 'dgeorgievski/hello'
         required: true
         type: string
       image-tag:
@@ -15,7 +15,7 @@ on:
         type: string
       namespace:
         description: 'Kubernetes namespace'
-        default: 'netwebapi'
+        default: 'hello'
         required: true
         type: string
       release-name:
