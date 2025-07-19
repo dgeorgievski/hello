@@ -1,0 +1,44 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: hello
+  description: A Hello World Go app
+  tags:
+    - go
+    - api
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    backstage.io/kubernetes-id: hello
+    backstage.io/kubernetes-label-selector: 'app=hello'
+    backstage.io/kubernetes-namespace: hello
+    argocd/app-name: hello
+    github.com/project-slug: dgeorgievski/hello
+  links:
+    - url: https://github.com/dgeorgievski/hello
+      title: Repo URL
+      icon: github
+spec:
+  # owner: all_usa_engineering_dl
+  owner: guest
+  lifecycle: production
+  type: service
+  system: hello
+
+---
+
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: hello
+  description: A CSharp MVC API based system
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - url: https://github.com/dgeorgievski/backstage-templates
+      title: Template Repo
+      icon: github
+spec:
+  owner: guest
+  lifecycle: production
+  type: service
