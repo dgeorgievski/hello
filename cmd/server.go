@@ -23,6 +23,12 @@ func appVersion(c *gin.Context) {
 		version.GetVersion())
 }
 
+func ping(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "pong",
+	})
+}
+
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -39,6 +45,7 @@ to quickly create a Cobra application.`,
 		r := gin.Default()
 		r.GET("/hello", hello)
 		r.GET("/version", appVersion)
+		r.GET("/ping", ping)
 		r.Run(":8080")
 	},
 }
