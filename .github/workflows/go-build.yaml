@@ -78,7 +78,7 @@ jobs:
           dry_run: true
           workflow_name: ${{ steps.get-filename.outputs.workflow_filename }}
   test-build:
-    uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@d91ceed8c75e6fde019140f003d292cd1c86bfe9 # v0.0.3
+    uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@1f840b73c5176e2b1a64dacaffd27e5a4707fe72 
     needs: hardened-security
     with:
       app-name: ${{ inputs.app-name }}
