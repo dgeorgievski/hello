@@ -40,6 +40,11 @@ on:
         required: false
         type: boolean
         default: true
+      check_all_workflows:
+        description: 'Check all workflows for SHA pinned actions. Default false'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   hardened-security:
@@ -51,16 +56,21 @@ jobs:
       - name: Extract workflow filename from github.workflow_ref
         id: get-filename
         run: |
-          # The variable `REF` will contain a string like `octocat/repo/.github/workflows/workflow-name-test.yml@...`
-          REF="${{ github.workflow_ref }}"
+          if [ "${{ inputs.check_all_workflows }}" = "true" ]; then
+            echo "Checking all workflows as 'check_all_workflows' is set to true."
+            FILENAME="all"
+          else
+            echo "Checking only the current workflow: $FILENAME"
+            # The variable `REF` will contain a string like `octocat/repo/.github/workflows/workflow-name-test.yml@...`
+            REF="${{ github.workflow_ref }}"
 
-          # Strip the ref suffix (everything after the first "@") and take the filename.
-          FILE_PATH="${REF%@*}"
-          echo "file_path=$FILE_PATH"
-          
-          FILENAME=$(basename "$FILE_PATH")
-          echo "Extracted workflow_filename: $FILENAME"
-
+            # Strip the ref suffix (everything after the first "@") and take the filename.
+            FILE_PATH="${REF%@*}"
+            echo "file_path=$FILE_PATH"
+            
+            FILENAME=$(basename "$FILE_PATH")
+            echo "Extracted workflow_filename: $FILENAME"
+          fi
           echo "workflow_filename=$FILENAME" >> "$GITHUB_OUTPUT"
       - name: Ensure SHA pinned actions
         uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3654dea536488107828430ca535197061d
