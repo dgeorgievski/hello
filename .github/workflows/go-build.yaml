@@ -53,10 +53,14 @@ jobs:
         run: |
           # The variable `REF` will contain a string like `octocat/repo/.github/workflows/workflow-name-test.yml@...`
           REF="${{ github.workflow_ref }}"
+
+          # Strip the ref suffix (everything after the first "@") and take the filename.
+          FILE_PATH="${REF%@*}"
+          echo "file_path=$FILE_PATH"
           
-          # Use 'basename' to get the filename from the path
-          FILENAME=$(basename "$REF")
-          
+          FILENAME=$(basename "$FILE_PATH")
+          echo "Extracted workflow_filename: $FILENAME"
+
           echo "workflow_filename=$FILENAME" >> "$GITHUB_OUTPUT"
       - name: Ensure SHA pinned actions
         uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3654dea536488107828430ca535197061d
