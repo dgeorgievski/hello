@@ -48,11 +48,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Ensure SHA pinned actions
-        uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@fc20afd97a337e05d98b3223daaaf33ed682350f 
+        uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3654dea536488107828430ca535197061d 
         with:
           dry_run: true
+          workflow_name: ${{ github.workflow }}
   test-build:
     uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@main
+    needs: hardened-security
     with:
       app-name: ${{ inputs.app-name }}
       go-version: ${{ inputs.go-version }}
