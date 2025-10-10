@@ -56,7 +56,7 @@ jobs:
       - name: Extract workflow filename from github.workflow_ref
         id: get-filename
         run: |
-          if [ "${{ inputs.check_all_workflows }}" = "true" ]; then
+          if [[ ${{ inputs.check_all_workflows }} = true ]]; then
             echo "Checking all workflows as 'check_all_workflows' is set to true."
             FILENAME="all"
           else
