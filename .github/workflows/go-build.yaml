@@ -59,7 +59,7 @@ jobs:
           
           echo "WORKFLOW_FILENAME=$FILENAME" >> "$GITHUB_ENV"
       - name: Ensure SHA pinned actions
-        uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3
+        uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3654dea536488107828430ca535197061d
         with:
           dry_run: true
           workflow_name: ${WORKFLOW_FILENAME}
