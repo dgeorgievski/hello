@@ -1,6 +1,13 @@
 name: Build Go App
 
 on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       app-name:
