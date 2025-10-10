@@ -185,7 +185,3 @@ Usage TODO
 ## Semantic Releases
 
 TODO
-
-## Test
-
-#2
