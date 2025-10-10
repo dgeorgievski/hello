@@ -52,7 +52,7 @@ jobs:
         with:
           dry_run: true
   test-build:
-    uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@test-go
+    uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@dab174da1f8d30519c139d60991b4e2db63917f8
     with:
       app-name: ${{ inputs.app-name }}
       go-version: ${{ inputs.go-version }}

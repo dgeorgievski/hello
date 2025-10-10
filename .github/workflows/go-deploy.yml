@@ -48,7 +48,7 @@ on:
           - 'aws-eks'
 jobs:
   test:
-    uses: dgeorgievski/my-github-actions/.github/workflows/go-deploy.yml@test-go
+    uses: dgeorgievski/my-github-actions/.github/workflows/go-deploy.yml@v17
     with:
       image-name: ${{ inputs.image-name }}
       image-tag: ${{ inputs.image-tag }}
