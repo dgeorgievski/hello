@@ -57,12 +57,12 @@ jobs:
           # Use 'basename' to get the filename from the path
           FILENAME=$(basename "$REF")
           
-          echo "WORKFLOW_FILENAME=$FILENAME" >> "$GITHUB_ENV"
+          echo "workflow_filename=$FILENAME" >> "$GITHUB_OUTPUT"
       - name: Ensure SHA pinned actions
         uses: dgeorgievski/github-actions-ensure-sha-pinned-actions@05677a3654dea536488107828430ca535197061d
         with:
           dry_run: true
-          workflow_name: ${WORKFLOW_FILENAME}
+          workflow_name: ${{ steps.get-filename.outputs.workflow_filename }}
   test-build:
     uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@main
     needs: hardened-security
