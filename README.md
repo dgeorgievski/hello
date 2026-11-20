@@ -155,6 +155,36 @@ PID   USER     TIME  COMMAND
 }
 ```
 
+## Health Endpoints
+
+The application exposes two Kubernetes health check endpoints for liveness and readiness probes:
+
+### Liveness Probe
+
+```sh
+curl -s localhost:8080/healthz
+```
+
+Response:
+```json
+{"status":"ok"}
+```
+
+Returns HTTP 200 when the application process is running. Kubernetes uses this to restart a container that is in a broken state.
+
+### Readiness Probe
+
+```sh
+curl -s localhost:8080/readyz
+```
+
+Response:
+```json
+{"status":"ready"}
+```
+
+Returns HTTP 200 when the application is ready to accept traffic. Kubernetes uses this to add or remove the pod from service endpoints.
+
 ## CI build and release workflows
 
 ### build

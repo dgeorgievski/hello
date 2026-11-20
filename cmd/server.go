@@ -35,6 +35,31 @@ func hey(c *gin.Context) {
 	})
 }
 
+func healthz(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+}
+
+func readyz(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ready",
+	})
+}
+
+// newRouter constructs the application router with all registered routes.
+// Exported for testability so HTTP handlers can be exercised without opening a network port.
+func newRouter() *gin.Engine {
+	r := gin.Default()
+	r.GET("/hello", hello)
+	r.GET("/version", appVersion)
+	r.GET("/ping", ping)
+	r.GET("/hey", hey)
+	r.GET("/healthz", healthz)
+	r.GET("/readyz", readyz)
+	return r
+}
+
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -48,11 +73,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("server called")
 
-		r := gin.Default()
-		r.GET("/hello", hello)
-		r.GET("/version", appVersion)
-		r.GET("/ping", ping)
-		r.GET("/hey", hey)
+		r := newRouter()
 		r.Run(":8080")
 	},
 }
@@ -66,7 +87,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
+	// Cobra supports local flags which will only run when
+	// this action is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

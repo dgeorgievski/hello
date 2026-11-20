@@ -32,3 +32,4 @@ work/
 # binary
 # hello
 # !./deploy/helm/hello
+.worktrees/
