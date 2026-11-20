@@ -4,6 +4,9 @@
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
+# Container port the application listens on; used by Deployment and Service named port "http"
+# Default: 8080 (must match cmd/server.go r.Run(":8080"))
+containerPort: 8080
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
