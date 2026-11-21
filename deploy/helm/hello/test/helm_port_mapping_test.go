@@ -1,4 +1,4 @@
-package cmd
+package helmtest
 
 import (
 	"os"
@@ -168,7 +168,7 @@ func TestHelmPortMapping(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Render Helm chart with the selected Service port.
-			chartPath, err := filepath.Abs("../deploy/helm/hello")
+			chartPath, err := filepath.Abs("../")
 			if err != nil {
 				t.Fatalf("failed to resolve chart path: %v", err)
 			}
