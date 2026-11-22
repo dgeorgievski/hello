@@ -49,6 +49,19 @@ func readyz(c *gin.Context) {
 	})
 }
 
+// newRouter constructs the application router with all registered GET routes.
+// Exported for testability so HTTP handlers can be exercised without opening a network port.
+func newRouter() *gin.Engine {
+	r := gin.Default()
+	r.GET("/hello", hello)
+	r.GET("/version", appVersion)
+	r.GET("/ping", ping)
+	r.GET("/hey", hey)
+	r.GET("/healthz", healthz)
+	r.GET("/readyz", readyz)
+	return r
+}
+
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -62,13 +75,7 @@ to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("server called")
 
-		r := gin.Default()
-		r.GET("/hello", hello)
-		r.GET("/version", appVersion)
-		r.GET("/ping", ping)
-		r.GET("/hey", hey)
-		r.GET("/healthz", healthz)
-		r.GET("/readyz", readyz)
+		r := newRouter()
 		r.Run(":8080")
 	},
 }

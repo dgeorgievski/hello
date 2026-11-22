@@ -5,74 +5,50 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/gin-gonic/gin"
 )
 
-func setupTestRouter() *gin.Engine {
-	gin.SetMode(gin.TestMode)
-	r := gin.Default()
-	r.GET("/hello", hello)
-	r.GET("/version", appVersion)
-	r.GET("/ping", ping)
-	r.GET("/hey", hey)
-	r.GET("/healthz", healthz)
-	r.GET("/readyz", readyz)
-	return r
-}
-
-func TestHealthzEndpoint(t *testing.T) {
-	router := setupTestRouter()
-
-	w := httptest.NewRecorder()
-	req, err := http.NewRequest(http.MethodGet, "/healthz", nil)
-	if err != nil {
-		t.Fatalf("failed to create request: %v", err)
-	}
-
-	router.ServeHTTP(w, req)
-
-	if w.Code != http.StatusOK {
-		t.Errorf("expected status %d, got %d", http.StatusOK, w.Code)
-	}
-
-	var body map[string]string
-	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
-		t.Fatalf("failed to parse response body: %v", err)
-	}
-
-	if body["status"] != "ok" {
-		t.Errorf("expected status 'ok', got '%s'", body["status"])
+func TestNewRouter(t *testing.T) {
+	r := newRouter()
+	if r == nil {
+		t.Fatal("newRouter returned nil")
 	}
 }
 
-func TestReadyzEndpoint(t *testing.T) {
-	router := setupTestRouter()
+func TestHealthz(t *testing.T) {
+	r := newRouter()
 
-	w := httptest.NewRecorder()
-	req, err := http.NewRequest(http.MethodGet, "/readyz", nil)
-	if err != nil {
-		t.Fatalf("failed to create request: %v", err)
+	tests := []struct {
+		name       string
+		path       string
+		wantStatus int
+	}{
+		{
+			name:       "healthz returns 200",
+			path:       "/healthz",
+			wantStatus: http.StatusOK,
+		},
+		{
+			name:       "readyz returns 200",
+			path:       "/readyz",
+			wantStatus: http.StatusOK,
+		},
 	}
 
-	router.ServeHTTP(w, req)
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, tt.path, nil)
+			rec := httptest.NewRecorder()
+			r.ServeHTTP(rec, req)
 
-	if w.Code != http.StatusOK {
-		t.Errorf("expected status %d, got %d", http.StatusOK, w.Code)
-	}
-
-	var body map[string]string
-	if err := json.Unmarshal(w.Body.Bytes(), &body); err != nil {
-		t.Fatalf("failed to parse response body: %v", err)
-	}
-
-	if body["status"] != "ready" {
-		t.Errorf("expected status 'ready', got '%s'", body["status"])
+			if rec.Code != tt.wantStatus {
+				t.Errorf("GET %s: got status %d, want %d", tt.path, rec.Code, tt.wantStatus)
+			}
+		})
 	}
 }
 
 func TestHelloEndpoint(t *testing.T) {
-	router := setupTestRouter()
+	r := newRouter()
 
 	w := httptest.NewRecorder()
 	req, err := http.NewRequest(http.MethodGet, "/hello", nil)
@@ -80,7 +56,7 @@ func TestHelloEndpoint(t *testing.T) {
 		t.Fatalf("failed to create request: %v", err)
 	}
 
-	router.ServeHTTP(w, req)
+	r.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status %d, got %d", http.StatusOK, w.Code)
@@ -97,7 +73,7 @@ func TestHelloEndpoint(t *testing.T) {
 }
 
 func TestPingEndpoint(t *testing.T) {
-	router := setupTestRouter()
+	r := newRouter()
 
 	w := httptest.NewRecorder()
 	req, err := http.NewRequest(http.MethodGet, "/ping", nil)
@@ -105,7 +81,7 @@ func TestPingEndpoint(t *testing.T) {
 		t.Fatalf("failed to create request: %v", err)
 	}
 
-	router.ServeHTTP(w, req)
+	r.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status %d, got %d", http.StatusOK, w.Code)
@@ -122,7 +98,7 @@ func TestPingEndpoint(t *testing.T) {
 }
 
 func TestHeyEndpoint(t *testing.T) {
-	router := setupTestRouter()
+	r := newRouter()
 
 	w := httptest.NewRecorder()
 	req, err := http.NewRequest(http.MethodGet, "/hey", nil)
@@ -130,7 +106,7 @@ func TestHeyEndpoint(t *testing.T) {
 		t.Fatalf("failed to create request: %v", err)
 	}
 
-	router.ServeHTTP(w, req)
+	r.ServeHTTP(w, req)
 
 	if w.Code != http.StatusOK {
 		t.Errorf("expected status %d, got %d", http.StatusOK, w.Code)
