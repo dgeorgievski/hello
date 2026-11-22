@@ -21,16 +21,19 @@ func TestHealthz(t *testing.T) {
 		name       string
 		path       string
 		wantStatus int
+		wantValue  string
 	}{
 		{
 			name:       "healthz returns 200",
 			path:       "/healthz",
 			wantStatus: http.StatusOK,
+			wantValue:  "ok",
 		},
 		{
 			name:       "readyz returns 200",
 			path:       "/readyz",
 			wantStatus: http.StatusOK,
+			wantValue:  "ready",
 		},
 	}
 
@@ -42,6 +45,15 @@ func TestHealthz(t *testing.T) {
 
 			if rec.Code != tt.wantStatus {
 				t.Errorf("GET %s: got status %d, want %d", tt.path, rec.Code, tt.wantStatus)
+			}
+
+			var body map[string]string
+			if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+				t.Fatalf("GET %s: failed to unmarshal JSON: %v", tt.path, err)
+			}
+
+			if got, ok := body["status"]; !ok || got != tt.wantValue {
+				t.Errorf("GET %s: body[\"status\"] = %q, want %q", tt.path, got, tt.wantValue)
 			}
 		})
 	}
