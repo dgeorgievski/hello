@@ -61,7 +61,7 @@ hello version
 
 ### Kind K8S cluster
 
-kind is a tool for running local Kubernetes clusters using Docker container “nodes”.
+kind is a tool for running local Kubernetes clusters using Docker container "nodes".
 
 Create a local `hello` kind cluster.
 
@@ -118,7 +118,7 @@ NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/hello   1/1     1            1           53s
 
 NAME                               DESIRED   CURRENT   READY   AGE
-replicaset.apps/hello-69c9cf5648   1         1         1       52s
+replicaset.apps/hello-69c9cf5648   1         1         1         52s
 ```
 
 
@@ -154,6 +154,26 @@ PID   USER     TIME  COMMAND
   "VERSION": "0.0.16"
 }
 ```
+
+## API Endpoints
+
+The application exposes the following HTTP endpoints on port 8080:
+
+| Endpoint   | Method | Description                                           | Response Body                     |
+|------------|--------|-------------------------------------------------------|-----------------------------------|
+| `/hello`   | GET    | Returns a welcome message                             | `{"message":"Hello, World!"}`     |
+| `/version` | GET    | Returns application version information               | `{"VERSION":"...","COMMIT":"...","DATE":"..."}` |
+| `/ping`    | GET    | Simple connectivity check (pong)                      | `{"message":"pong"}`              |
+| `/hey`     | GET    | Returns a greeting                                    | `{"message":"joe"}`               |
+| `/healthz` | GET    | Liveness probe endpoint. Returns 200 OK when the application process is running. | `{"status":"ok"}` |
+| `/readyz`  | GET    | Readiness probe endpoint. Returns 200 OK when the application is ready to accept traffic. | `{"status":"ready"}` |
+
+### Health Probes
+
+- **`/healthz`** — Used by Kubernetes as the liveness probe. A HTTP 200 response indicates the process is alive. No dependency checks are performed.
+- **`/readyz`** — Used by Kubernetes as the readiness probe. A HTTP 200 response indicates the application is ready to serve traffic. No dependency checks are performed.
+
+These probes are configured in both the plain Kubernetes manifest (`deploy/manifests/deployment.yaml`) and the Helm chart (`deploy/helm/hello/values.yaml`).
 
 ## CI build and release workflows
 

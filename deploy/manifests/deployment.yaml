@@ -27,4 +27,16 @@ spec:
             cpu: "200m"       
           requests:
             memory: "128Mi"  
-            cpu: "100m"      
+            cpu: "100m"
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5

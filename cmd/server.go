@@ -35,6 +35,20 @@ func hey(c *gin.Context) {
 	})
 }
 
+// healthz returns the liveness health status.
+func healthz(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+	})
+}
+
+// readyz returns the readiness status.
+func readyz(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ready",
+	})
+}
+
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
 	Use:   "server",
@@ -53,6 +67,8 @@ to quickly create a Cobra application.`,
 		r.GET("/version", appVersion)
 		r.GET("/ping", ping)
 		r.GET("/hey", hey)
+		r.GET("/healthz", healthz)
+		r.GET("/readyz", readyz)
 		r.Run(":8080")
 	},
 }
@@ -66,7 +82,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// serverCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
+	// Cobra supports local flags which will only run when
+	// this action is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
