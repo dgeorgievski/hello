@@ -78,19 +78,21 @@ func newRouter() *gin.Engine {
 
 // serverCmd represents the server command
 var serverCmd = &cobra.Command{
-	Use:   "server",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
-
-		r := newRouter()
-		r.Run(":8080")
+	Use:          "server",
+	Short:        "Start the Hello HTTP server",
+	SilenceUsage: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		server := &http.Server{
+			Addr:              ":8080",
+			Handler:           newRouter(),
+			ReadHeaderTimeout: 5 * time.Second,
+			WriteTimeout:      15 * time.Second,
+			IdleTimeout:       60 * time.Second,
+		}
+		if err := server.ListenAndServe(); err != nil {
+			return fmt.Errorf("serve HTTP on %s: %w", server.Addr, err)
+		}
+		return nil
 	},
 }
 

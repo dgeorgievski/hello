@@ -1,32 +1,36 @@
-FROM golang:1.24@sha256:30baaea08c5d1e858329c50f29fe381e9b7d7bced11a0f5f1f69a1504cdfbf5e AS builder
+FROM golang:1.27.4@sha256:87f49b77a7b6a99ad7dc656be010ae453322459dd2ed902ac177649a302bc101 AS builder
 
-ARG GITHUB_REPO=github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello
-ARG VERSION="dev"
-ARG COMMIT="none"
-ARG BUILD_UNIX_TIME=$(date +%s%M)
-RUN go env -w GOCACHE=/go-cache
-RUN go env -w GOMODCACHE=/gomod-cache
+ARG VERSION
+ARG COMMIT
+ARG BUILD_DATE
+ENV CGO_ENABLED=0
+WORKDIR /src
 
-WORKDIR /app
+COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
-COPY . .
-
-RUN --mount=type=cache,target=/gomod-cache\
-     go mod download
-
-RUN --mount=type=cache,target=/gomod-cache \
-    --mount=type=cache,target=/gomod-cache \ 
-    CGO_ENABLED=0 \
-    go build \
-    -ldflags " -s -w \
-        -X ${GITHUB_REPO}/pkg/version.VERSION=${VERSION} \
-        -X ${GITHUB_REPO}/pkg/version.COMMIT=${COMMIT} \
-        -X ${GITHUB_REPO}/pkg/version.DATE=${BUILD_UNIX_TIME}" \
-    -tags netgo,osusergo -a -o bin/hello
+# The shared CI workflow checks out tags but does not pass build arguments.
+# Read Git metadata from the bind mount without copying .git into an image layer.
+RUN --mount=type=bind,target=/src \
+    --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    set -eu; \
+    if [ -z "${VERSION:-}" ] || [ -z "${COMMIT:-}" ] || [ -z "${BUILD_DATE:-}" ]; then \
+        if git -c safe.directory=/src rev-parse --verify 'HEAD^{commit}' >/dev/null 2>&1; then \
+            tag=$(git -c safe.directory=/src describe --tags --exact-match --match 'v[0-9]*.[0-9]*.[0-9]*' HEAD 2>/dev/null || true); \
+            VERSION=${VERSION:-${tag#v}}; \
+            COMMIT=${COMMIT:-$(git -c safe.directory=/src rev-parse --short HEAD)}; \
+            BUILD_DATE=${BUILD_DATE:-$(git -c safe.directory=/src show -s --format=%cI HEAD)}; \
+        fi; \
+    fi; \
+    module=$(go list -m); \
+    go build -buildvcs=false \
+        -ldflags "-s -w -X $module/pkg/version.VERSION=${VERSION:-dev} -X $module/pkg/version.COMMIT=${COMMIT:-none} -X $module/pkg/version.DATE=${BUILD_DATE:-none}" \
+        -o /hello .
 
 FROM scratch
 
-COPY --from=builder /app/bin/hello /hello
+COPY --from=builder /hello /hello
 
 EXPOSE 8080
 

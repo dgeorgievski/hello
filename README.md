@@ -4,7 +4,7 @@ A demo of best DevSecOps practices with focus on automation, collaboration, secu
 
 ## Requirements
 
-1. [go v1.24+](https://go.dev/doc/install)
+1. [Go 1.27.4 or later](https://go.dev/doc/install)
 2. [git cli](https://git-scm.com/downloads)
 3. [make](https://www.gnu.org/software/make/) - Optional. In case of Windows OS, it is possible to execute the build commands defined in the Makefile from the command line.
 
@@ -15,47 +15,30 @@ A demo of best DevSecOps practices with focus on automation, collaboration, secu
 Clone hello repository. 
 
 ```sh
-> git clone git@github.com:altimetrik-digital-enablement-demo-hub/dgeorgievski-hello.git
-> cd dgeorgievski-hello
+git clone https://github.com/dgeorgievski/hello.git
+cd hello
 ```
 
-Build the binary. TAG env variable sets the application version. If not specified, the default is `dev`
+`make build` stamps the binary with the version, short Git commit, and RFC 3339
+commit date. On a `vX.Y.Z` tag the version is `X.Y.Z`; otherwise it is `dev`.
+Set `TAG` to override the version for both binary and image builds.
 
 ```sh
-> TAG=0.0.16 make build
-Build availalbe at ./bin/dgeorgievski-hello
-
-> ./bin/dgeorgievski-hello version
-hello version
-  version: 0.0.16
-  commit: 1de9255
+make build
+./bin/dgeorgievski-hello version
+make check-build TAG=0.0.0-smoke  # Requires curl, jq, and an unused port 8080.
 ```
 
 ## Build hello container image
 
 ```sh
-$ make docker-build
-docker build \
-	--build-arg VERSION="0.0.16" \
-	--build-arg COMMIT="1de9255" \
-	--build-arg BUILD_UNIX_TIME="174645213735" \
-	-f docker/Dockerfile \
-	 -t dgeorgievski/dgeorgievski-hello:0.0.16 .
-[+] Building 13.2s (14/14) FINISHED
- => [internal] load build definition from Dockerfile
- ...
- => => naming to docker.io/dgeorgievski/dgeorgievski-hello:0 
- ....
- => => unpacking to docker.io/dgeorgievski/dgeorgievski-hello:0.0.16
+make docker-build
+docker run --rm ghcr.io/dgeorgievski/hello:dev /hello version
 ```
 
-Test the new container image
-```sh
-$ docker run --rm -ti dgeorgievski/dgeorgievski-hello:0.0.16 /hello version
-hello version
-  version: 0.0.16
-  commit: 1de9255
-```
+The example uses an untagged checkout. A tagged checkout uses its release
+version as the image tag instead of `dev`. A Docker build from a tagged Git
+checkout uses the same version even when no build arguments are provided.
 
 ## Kubernetes deployment
 
@@ -71,23 +54,18 @@ $ kind get clusters
 hello
 ```
 
-Upload the dsocker image to the `hello` kind cluster.
+To run a local build instead of the published release, load the `dev` image:
 
 ```sh
-$ make kind-docker-upload
-
-# or, manually
-$ kind --name hello load docker-image dgeorgievski/dgeorgievski-hello:0.0.16 
+make kind-docker-upload TAG=dev
 ```
 
-Ensure `hello` container image is set to correct version in `deploy/manifests/deployment.yaml` manifest file.
+The raw manifests and the Helm chart default to the published `2.2.0` image.
+To use the local build with Helm, pass `--set image.tag=dev`. For the raw
+manifests, apply them first, then override the deployment image:
 
-```yaml
- spec:
-    serviceAccountName: hello
-    containers:
-    - name: hello
-      image: dgeorgievski/dgeorgievski-hello:0.0.16
+```sh
+kubectl -n hello set image deployment/hello hello=ghcr.io/dgeorgievski/hello:dev
 ```
 
 Create `hello` namespace
@@ -150,8 +128,8 @@ PID   USER     TIME  COMMAND
 / # curl -s localhost:8080/version | jq
 {
   "COMMIT": "1de9255",
-  "DATE": "174641174022",
-  "VERSION": "0.0.16"
+  "DATE": "2026-11-23T22:10:04-05:00",
+  "VERSION": "2.2.0"
 }
 ```
 
@@ -187,18 +165,15 @@ Returns HTTP 200 when the application is ready to accept traffic. Kubernetes use
 
 ## CI build and release workflows
 
-### build
+The build workflow runs `govulncheck` and verifies the built binary's CLI and
+HTTP version metadata before delegating to the shared build pipeline. The
+`server` command exits nonzero on startup failure and bounds the HTTP header
+read, response write, and idle connection times.
 
-This workflow builds the binary, sets the applicatin version and commit hash, and if the branch name is main it creates a git tag using the applicatin version, followed by a dispatch call to the release workflow.
-
-The version is based on the branch type:
-1. main - vN.N.N; It keeps the SemVer version from 
-2. other branch - The version follows the following format: `<branchname>-<YYYYMMDD>.<github_run_number>`
-
-### release
-
-Release is invoked by a push tag event. The tag value has to have the SemVer format with three parts: `v*.*.*`
-The release is automatically called from the build  workflow using a dispatch event call after the build workflow pushes a tag to the main branch.
+Release tags use `vX.Y.Z`; the version embedded in GoReleaser binaries and the
+full container tag is `X.Y.Z`. When updating the default deployed release,
+update `pkg/version/version.go`, Helm `appVersion`, the raw deployment image
+tag, and the deploy workflow's default tag together.
 
 ## Git Hooks scripts
 

@@ -10,7 +10,7 @@ on:
         type: string
       image-tag:
         description: 'Image tag'
-        default: 'latest'
+        default: '2.2.0'
         required: true
         type: string
       namespace:

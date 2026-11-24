@@ -35,9 +35,9 @@ builds:
     ldflags:
       - -extldflags '-static'
       - -s -w 
-      - -X github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version.VERSION={{.Version}}
-      - -X github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version.COMMIT={{.ShortCommit}}
-      - -X github.com/altimetrik-digital-enablement-demo-hub/dgeorgievski-hello/pkg/version.DATE={{.Date}}
+      - -X {{ .ModulePath }}/pkg/version.VERSION={{ .Version }}
+      - -X {{ .ModulePath }}/pkg/version.COMMIT={{ .ShortCommit }}
+      - -X {{ .ModulePath }}/pkg/version.DATE={{ .CommitDate }}
 archives:
   - formats: [ 'tar.gz' ]
     # this name template makes the OS and Arch compatible with the results of `uname`.
