@@ -57,6 +57,7 @@ func newRouter() *gin.Engine {
 	r.GET("/hey", hey)
 	r.GET("/healthz", healthz)
 	r.GET("/readyz", readyz)
+	r.GET("/greet", greet)
 	return r
 }
 
@@ -90,4 +91,14 @@ func init() {
 	// Cobra supports local flags which will only run when
 	// this action is called directly, e.g.:
 	// serverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func greet(c *gin.Context) {
+	name := c.Query("name")
+	if name == "" {
+		name = "World"
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("Hello, %s!", name),
+	})
 }

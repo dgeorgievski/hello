@@ -94,3 +94,54 @@ func TestExistingEndpoints(t *testing.T) {
 		})
 	}
 }
+
+func TestGreet(t *testing.T) {
+	r := newRouter()
+
+	tests := []struct {
+		name       string
+		query      string
+		wantStatus int
+		wantMsg    string
+	}{
+		{
+			name:       "with name",
+			query:      "name=Alice",
+			wantStatus: http.StatusOK,
+			wantMsg:    "Hello, Alice!",
+		},
+		{
+			name:       "without name",
+			query:      "",
+			wantStatus: http.StatusOK,
+			wantMsg:    "Hello, World!",
+		},
+		{
+			name:       "empty name",
+			query:      "name=",
+			wantStatus: http.StatusOK,
+			wantMsg:    "Hello, World!",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(http.MethodGet, "/greet?"+tt.query, nil)
+			rec := httptest.NewRecorder()
+			r.ServeHTTP(rec, req)
+
+			if rec.Code != tt.wantStatus {
+				t.Errorf("GET /greet: got status %d, want %d", rec.Code, tt.wantStatus)
+			}
+
+			var body map[string]string
+			if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+				t.Fatalf("GET /greet: failed to unmarshal JSON: %v", err)
+			}
+
+			if got := body["message"]; got != tt.wantMsg {
+				t.Errorf("GET /greet: message = %q, want %q", got, tt.wantMsg)
+			}
+		})
+	}
+}
