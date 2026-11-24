@@ -18,7 +18,7 @@ spec:
       serviceAccountName: hello
       containers:
       - name: hello
-        image: dgeorgievski/dgeorgievski-hello:0.0.1
+        image: ghcr.io/dgeorgievski/hello:2.2.0
         ports:
         - containerPort: 8080
         livenessProbe:

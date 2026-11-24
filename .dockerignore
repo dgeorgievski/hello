@@ -1,0 +1,9 @@
+docker/
+bin/
+deploy/
+.worktrees/
+dist/
+hello
+*.out
+go.work
+go.work.sum

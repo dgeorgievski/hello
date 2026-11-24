@@ -19,7 +19,7 @@ on:
         description: 'Go version'
         required: false
         type: string
-        default: '1.24'
+        default: '1.27.4'
       registry:
         description: 'Container registry'
         required: false
@@ -77,16 +77,30 @@ jobs:
         with:
           dry_run: true
           workflow_name: ${{ steps.get-filename.outputs.workflow_filename }}
+  go-checks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version-file: go.mod
+      - name: Check reachable Go vulnerabilities
+        run: go run golang.org/x/vuln/cmd/govulncheck@v1.10.0 ./...
+      - name: Verify the stamped binary
+        run: make check-build TAG=0.0.0-smoke
+
   test-build:
     uses: dgeorgievski/my-github-actions/.github/workflows/go-build.yml@1f840b73c5176e2b1a64dacaffd27e5a4707fe72 
-    needs: hardened-security
+    needs: [hardened-security, go-checks]
     with:
-      app-name: ${{ inputs.app-name }}
-      go-version: ${{ inputs.go-version }}
-      registry: ${{ inputs.registry }}
-      docker-context: ${{ inputs.docker-context }}
-      docker-file: ${{ inputs.docker-file }}
-      docker-push: ${{ inputs.docker-push }}
+      app-name: ${{ inputs.app-name || 'hello' }}
+      go-version: ${{ inputs.go-version || '1.27.4' }}
+      registry: ${{ inputs.registry || 'ghcr.io' }}
+      docker-context: ${{ inputs.docker-context || '.' }}
+      docker-file: ${{ inputs.docker-file || './docker/Dockerfile' }}
+      docker-push: ${{ github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.docker-push) }}
     secrets: inherit
 
       
