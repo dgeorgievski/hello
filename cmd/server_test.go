@@ -145,3 +145,39 @@ func TestGreet(t *testing.T) {
 		})
 	}
 }
+
+func TestRequestLoggerMiddleware(t *testing.T) {
+	r := newRouter()
+
+	tests := []struct {
+		name       string
+		method     string
+		path       string
+		wantStatus int
+	}{
+		{
+			name:       "GET /hello",
+			method:     http.MethodGet,
+			path:       "/hello",
+			wantStatus: http.StatusOK,
+		},
+		{
+			name:       "GET /nonexistent returns 404",
+			method:     http.MethodGet,
+			path:       "/nonexistent",
+			wantStatus: http.StatusNotFound,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			req := httptest.NewRequest(tt.method, tt.path, nil)
+			rec := httptest.NewRecorder()
+			r.ServeHTTP(rec, req)
+
+			if rec.Code != tt.wantStatus {
+				t.Errorf("%s %s: got status %d, want %d", tt.method, tt.path, rec.Code, tt.wantStatus)
+			}
+		})
+	}
+}
