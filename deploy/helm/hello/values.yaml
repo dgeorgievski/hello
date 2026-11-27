@@ -13,6 +13,9 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+# Port the application listens on inside the container. Drives the container port, named port, and probes.
+appPort: 8080
+
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.
