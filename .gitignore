@@ -30,6 +30,5 @@ bin/
 work/
 
 # binary
-# hello
-# !./deploy/helm/hello
+hello
 .worktrees/
