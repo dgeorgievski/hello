@@ -12,7 +12,7 @@ BUILD_OUTPUT ?= ./bin/$(NAME)
 
 # docker push registry.gitlab.casa-systems.com/dimitar.georgievski/5g-metrics
 run:
-	go run main.go  $(EXTRA_RUN_ARGS)
+	go run main.go server $(EXTRA_RUN_ARGS)
 
 .PHONY: test
 test:
